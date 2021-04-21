@@ -26,4 +26,10 @@ export default class ClassroomsController {
   public async destroy({ params }: HttpContextContract) {
     return await this.classroomService.deleteOne(params.id)
   }
+  public async enrollToClassroom({ session, params }: HttpContextContract) {
+    return await this.classroomService.enrollToClassroom(params.id, session.get('user').id)
+  }
+  public async unEnrollFromClassroom({ session, params }: HttpContextContract) {
+    return await this.classroomService.unEnrollFromClassroom(params.id, session.get('user').id)
+  }
 }

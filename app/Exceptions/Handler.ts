@@ -1,3 +1,5 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
 /*
 |--------------------------------------------------------------------------
 | Http Exception Handler
@@ -12,12 +14,21 @@
 | properly.
 |
 */
-
 import Logger from '@ioc:Adonis/Core/Logger'
-import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
   constructor() {
     super(Logger)
+  }
+
+  public async handle(error, ctx: HttpContextContract) {
+    if (error.code === 'E_ROW_NOT_FOUND') {
+      return ctx.response.badRequest({
+        message: 'cannot find entry in database',
+        route: ctx.route && ctx.route.pattern,
+      })
+    }
+
+    return super.handle(error, ctx)
   }
 }

@@ -21,4 +21,11 @@ export default class CourseService {
   async deleteOne(id: number) {
     return await this.courseRepo.deleteOne(id)
   }
+
+  async enrollToCourse(courseId: number, userId: number) {
+    return await this.courseRepo.enrollToCourse(courseId, userId)
+  }
+  async unEnrollFromCourse(courseId: number, userId: number) {
+    return await this.courseRepo.unEnrollFromCourse(courseId, userId)
+  }
 }

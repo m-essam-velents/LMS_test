@@ -47,6 +47,18 @@ Route.group(() => {
 
 // course
 Route.resource('course', 'CoursesController').apiOnly()
+Route.group(() => {
+  Route.post('enroll/:id', 'CoursesController.enrollToCourse').where('id', /\d/)
+  Route.put('unEnroll/:id', 'CoursesController.unEnrollFromCourse').where('id', /\d/)
+})
+  .prefix('course')
+  .middleware(['auth'])
 
 // classroom
 Route.resource('classroom', 'ClassroomsController').apiOnly()
+Route.group(() => {
+  Route.post('enroll/:id', 'ClassroomsController.enrollToClassroom').where('id', /\d/)
+  Route.put('unEnroll/:id', 'ClassroomsController.unEnrollFromClassroom').where('id', /\d/)
+})
+  .prefix('classroom')
+  .middleware(['auth'])

@@ -1,6 +1,8 @@
+import Classroom from 'App/Models/Classroom'
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Course from './Classroom'
 
 export default class User extends BaseModel {
   public static table = 'users'
@@ -54,6 +56,25 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  /* relations */
+  @manyToMany(() => Course, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'course_id',
+    relatedKey: 'id',
+    pivotTable: 'course_enrollments',
+  })
+  public courses: ManyToMany<typeof Course>
+
+  @manyToMany(() => Classroom, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'classroom_id',
+    relatedKey: 'id',
+    pivotTable: 'classroom_enrollments',
+  })
+  public classrooms: ManyToMany<typeof Classroom>
 
   @beforeSave()
   public static async hashPassword(user: User) {

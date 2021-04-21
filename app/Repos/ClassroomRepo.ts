@@ -1,4 +1,5 @@
 import Classroom from 'App/Models/Classroom'
+import User from 'App/Models/User'
 
 export default class ClassroomRepo {
   async getAll() {
@@ -33,5 +34,21 @@ export default class ClassroomRepo {
   async deleteOne(id: number) {
     const classroom = await Classroom.findOrFail(id)
     await classroom.delete()
+  }
+
+  async enrollToClassroom(classroomId: number, userId: number) {
+    const [classroom, user] = await Promise.all([
+      Classroom.findOrFail(classroomId),
+      User.findOrFail(userId),
+    ])
+    await user.related('classrooms').sync([classroom.id])
+  }
+
+  async unEnrollFromClassroom(classroomId: number, userId: number) {
+    const [classroom, user] = await Promise.all([
+      Classroom.findOrFail(classroomId),
+      User.findOrFail(userId),
+    ])
+    await user.related('classrooms').detach([classroom.id])
   }
 }
