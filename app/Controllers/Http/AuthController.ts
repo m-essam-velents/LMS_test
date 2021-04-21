@@ -1,6 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import BadRequestException from 'App/Exceptions/BadRequestException'
-import UnAuthorizedException from 'App/Exceptions/UnAuthorizedException'
 import UserService from 'App/Services/UserService'
 import LoginValidator from 'App/Validators/LoginValidator'
 import RegisterValidator from 'App/Validators/RegisterValidator'
@@ -24,7 +23,7 @@ export default class AuthController {
     const { validate } = new LoginValidator(ctx)
     await validate()
     const user = await ctx.auth.attempt(ctx.request.input('email'), ctx.request.input('password'))
-    ctx.session.put('user', { id: user.id, email: user.email })
+    ctx.session.put('user', { id: user.id, email: user.email, type: user.type })
     ctx.response.json(user)
   }
 

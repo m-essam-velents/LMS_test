@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import UnAuthorizedException from 'App/Exceptions/UnAuthorizedException'
 import ClassroomService from 'App/Services/ClassroomService'
 import ClassroomValidator from 'App/Validators/CourseValidator'
 
@@ -31,5 +32,13 @@ export default class ClassroomsController {
   }
   public async unEnrollFromClassroom({ session, params }: HttpContextContract) {
     return await this.classroomService.unEnrollFromClassroom(params.id, session.get('user').id)
+  }
+  public async admit({ session, params }: HttpContextContract) {
+    const { id, type } = session.get('user') || {}
+    // check if user is student or not
+    if (type !== 1) {
+      throw new UnAuthorizedException()
+    }
+    return await this.classroomService.admit(params.id, id)
   }
 }

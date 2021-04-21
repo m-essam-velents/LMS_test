@@ -59,6 +59,7 @@ Route.resource('classroom', 'ClassroomsController').apiOnly()
 Route.group(() => {
   Route.post('enroll/:id', 'ClassroomsController.enrollToClassroom').where('id', /\d/)
   Route.put('unEnroll/:id', 'ClassroomsController.unEnrollFromClassroom').where('id', /\d/)
+  Route.post('admit/:id', 'ClassroomsController.admit').where('id', /\d/)
 })
   .prefix('classroom')
   .middleware(['auth'])

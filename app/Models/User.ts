@@ -1,8 +1,17 @@
 import Classroom from 'App/Models/Classroom'
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  manyToMany,
+  ManyToMany,
+  hasMany,
+  HasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import Course from './Classroom'
+import Admission from './Admission'
 
 enum UserTypes {
   Instructor,
@@ -82,6 +91,9 @@ export default class User extends BaseModel {
     pivotTable: 'classroom_enrollments',
   })
   public classrooms: ManyToMany<typeof Classroom>
+
+  @hasMany(() => Admission)
+  public admissions: HasMany<typeof Admission>
 
   @beforeSave()
   public static async hashPassword(user: User) {
