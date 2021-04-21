@@ -8,7 +8,7 @@ export default class Classrooms extends BaseSchema {
       table.increments('id')
       table.string('name').notNullable()
       table.integer('price').notNullable()
-      table.enu('status', ['active', 'temporary_closed', 'closed', 'archived']).defaultTo('active')
+      table.enum('status', ['active', 'temporary_closed', 'closed', 'archived']).defaultTo('active')
       table.enum('type', ['onGround', 'online']).notNullable()
       table.string('description').nullable()
       table.integer('admitted_users_count').defaultTo(0)

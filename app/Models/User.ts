@@ -4,6 +4,10 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Course from './Classroom'
 
+enum UserTypes {
+  Instructor,
+  Student,
+}
 export default class User extends BaseModel {
   public static table = 'users'
 
@@ -15,6 +19,9 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public password: string
+
+  @column()
+  public type: UserTypes
 
   @column({ serializeAs: null })
   public ssn: string

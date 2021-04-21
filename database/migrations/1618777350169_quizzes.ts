@@ -10,8 +10,6 @@ export default class Quizzes extends BaseSchema {
       table.string('time_limit').nullable()
       //if total score is null then this quiz is not rated
       table.integer('total_score').nullable()
-      // table.integer('per_question_score').nullable()
-
       table.integer('lesson_id').unsigned()
       table
         .foreign('lesson_id')
