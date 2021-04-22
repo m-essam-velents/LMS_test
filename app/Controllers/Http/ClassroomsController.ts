@@ -27,18 +27,29 @@ export default class ClassroomsController {
   public async destroy({ params }: HttpContextContract) {
     return await this.classroomService.deleteOne(params.id)
   }
-  public async enrollToClassroom({ session, params }: HttpContextContract) {
-    return await this.classroomService.enrollToClassroom(params.id, session.get('user').id)
-  }
-  public async unEnrollFromClassroom({ session, params }: HttpContextContract) {
+
+  /* only student */
+  public async unEnrollFromClassroom({ params, session }: HttpContextContract) {
     return await this.classroomService.unEnrollFromClassroom(params.id, session.get('user').id)
   }
+
   public async admit({ session, params }: HttpContextContract) {
-    const { id, type } = session.get('user') || {}
-    // check if user is student or not
-    if (type !== 1) {
-      throw new UnAuthorizedException()
-    }
-    return await this.classroomService.admit(params.id, id)
+    return await this.classroomService.admit(params.id, session.get('user').id)
+  }
+
+  /* only instructor */
+
+  public async acceptAdmission({ request }: HttpContextContract) {
+    return await this.classroomService.acceptAdmission(
+      request.input('classroomId'),
+      request.input('userId')
+    )
+  }
+
+  public async rejectAdmission({ request }: HttpContextContract) {
+    return await this.classroomService.rejectAdmission(
+      request.input('classroomId'),
+      request.input('userId')
+    )
   }
 }

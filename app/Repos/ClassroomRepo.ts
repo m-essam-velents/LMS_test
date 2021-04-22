@@ -58,18 +58,21 @@ export default class ClassroomRepo {
       Classroom.findOrFail(classroomId),
       User.findOrFail(userId),
     ])
-    return await user.related('admissions').create({ userId: user.id, classroomId: classroom.id })
+    return await user
+      .related('admissions')
+      .updateOrCreate({ userId: user.id, classroomId: classroom.id }, { currentStatus: 'pending' })
   }
   async updateAdmission(data, classroomId, userId) {
+    console.log(classroomId, userId)
     const admission = await Admission.query()
-      .where('classroom_id', classroomId)
-      .andWhere('user_id', userId)
+      .where('classroom_id', 1)
+      .andWhere('user_id', 4)
       .firstOrFail()
 
-    admission.prevStatus = admission.currentStatus
-    admission.currentStatus = data.currentStatus
-    admission.rejectionReason = data.rejectionReason
-
-    return await admission.save()
+    return await Admission.query().where('classroom_id', 1).andWhere('user_id', 4).update({
+      prev_status: admission.currentStatus,
+      current_status: data.currentStatus,
+      rejection_reason: data.rejectionReason,
+    })
   }
 }

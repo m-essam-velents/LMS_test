@@ -22,15 +22,30 @@ export default class ClassroomService {
     return await this.classroomRepo.deleteOne(id)
   }
 
-  async enrollToClassroom(classroomId: number, userId: number) {
-    await this.classroomRepo.updateAdmission({ currentStatus: 'accepted' }, classroomId, userId)
-    return await this.classroomRepo.enrollToClassroom(classroomId, userId)
-  }
-
   async unEnrollFromClassroom(classroomId: number, userId: number) {
+    await this.classroomRepo.updateAdmission(
+      {
+        currentStatus: null,
+      },
+      classroomId,
+      userId
+    )
     return await this.classroomRepo.unEnrollFromClassroom(classroomId, userId)
   }
   async admit(classroomId, userId) {
     return await this.classroomRepo.createAdmission(classroomId, userId)
+  }
+
+  async acceptAdmission(classroomId: number, userId: number) {
+    await this.classroomRepo.updateAdmission({ currentStatus: 'accepted' }, classroomId, userId)
+    return await this.classroomRepo.enrollToClassroom(classroomId, userId)
+  }
+
+  async rejectAdmission(classroomId, userId) {
+    return await this.classroomRepo.updateAdmission(
+      { currentStatus: 'rejected' },
+      classroomId,
+      userId
+    )
   }
 }

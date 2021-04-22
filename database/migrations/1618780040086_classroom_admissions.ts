@@ -12,7 +12,10 @@ export default class ClassroomAdmissions extends BaseSchema {
       table.foreign('classroom_id').references('id').inTable('classrooms')
       table.foreign('user_id').references('id').inTable('users')
 
-      table.enum('current_status', ['pending', 'accepted', 'rejected']).defaultTo('pending')
+      table
+        .enum('current_status', ['pending', 'accepted', 'rejected'])
+        .defaultTo('pending')
+        .nullable()
       table.enum('prev_status', ['pending', 'accepted', 'rejected']).nullable()
       table.string('rejection_reason').nullable()
 

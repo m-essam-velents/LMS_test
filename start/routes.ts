@@ -20,6 +20,8 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
+import { UserTypes } from 'Contracts/db/User'
+
 /* Route.get('/', async () => {
   return { hello: 'world' }
 })
@@ -46,20 +48,45 @@ Route.group(() => {
   .middleware(['auth'])
 
 // course
-Route.resource('course', 'CoursesController').apiOnly()
+Route.resource('course', 'CoursesController')
+  .apiOnly()
+  .middleware({
+    store: ['auth', `acl:${UserTypes.Instructor}`],
+    destroy: ['auth', `acl:${UserTypes.Instructor}`],
+    update: ['auth', `acl:${UserTypes.Instructor}`],
+  })
 Route.group(() => {
   Route.post('enroll/:id', 'CoursesController.enrollToCourse').where('id', /\d/)
   Route.put('unEnroll/:id', 'CoursesController.unEnrollFromCourse').where('id', /\d/)
 })
   .prefix('course')
-  .middleware(['auth'])
+  .middleware(['auth', `acl:${UserTypes.Student}`])
 
 // classroom
-Route.resource('classroom', 'ClassroomsController').apiOnly()
+Route.resource('classroom', 'ClassroomsController')
+  .apiOnly()
+  .middleware({
+    store: ['auth', `acl:${UserTypes.Instructor}`],
+    destroy: ['auth', `acl:${UserTypes.Instructor}`],
+    update: ['auth', `acl:${UserTypes.Instructor}`],
+  })
 Route.group(() => {
-  Route.post('enroll/:id', 'ClassroomsController.enrollToClassroom').where('id', /\d/)
-  Route.put('unEnroll/:id', 'ClassroomsController.unEnrollFromClassroom').where('id', /\d/)
-  Route.post('admit/:id', 'ClassroomsController.admit').where('id', /\d/)
+  /* only students can perform this */
+  Route.post('admit/:id', 'ClassroomsController.admit')
+    .where('id', /\d/)
+    .middleware([`acl:${UserTypes.Student}`])
+
+  Route.put('unEnroll/:id', 'ClassroomsController.unEnrollFromClassroom')
+    .where('id', /\d/)
+    .middleware([`acl:${UserTypes.Student}`])
+
+  /* only instructor can perform this */
+  Route.put('admission/reject', 'classroomsController.rejectAdmission').middleware([
+    `acl:${UserTypes.Instructor}`,
+  ])
+  Route.put('admission/accept', 'classroomsController.acceptAdmission').middleware([
+    `acl:${UserTypes.Instructor}`,
+  ])
 })
   .prefix('classroom')
   .middleware(['auth'])

@@ -6,7 +6,6 @@ import Classroom from './Classroom'
 
 export default class Admission extends BaseModel {
   public static table = 'classroom_admissions'
-
   @column({ isPrimary: true })
   public userId: number
 

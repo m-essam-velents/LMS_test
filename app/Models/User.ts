@@ -12,11 +12,8 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Course from './Classroom'
 import Admission from './Admission'
+import { UserTypes } from 'Contracts/db/User'
 
-enum UserTypes {
-  Instructor,
-  Student,
-}
 export default class User extends BaseModel {
   public static table = 'users'
 
